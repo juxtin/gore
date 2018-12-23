@@ -72,7 +72,7 @@ func GetImports(tree *sitter.Tree, document []byte) []string {
 	return ret
 }
 
-func Run(filenames []string) ([]string, error) {
+func ImportsInFile(filenames []string) ([]string, error) {
 	var ret []string
 	for _, filename := range filenames {
 		document, err := ioutil.ReadFile(filename)
