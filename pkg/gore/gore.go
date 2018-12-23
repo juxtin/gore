@@ -1,4 +1,4 @@
-package main
+package gore
 
 import (
 	"fmt"
@@ -7,8 +7,6 @@ import (
 	sitter "github.com/smacker/go-tree-sitter"
 	"github.com/smacker/go-tree-sitter/golang"
 )
-
-import "os"
 
 func ParseFile(document []byte) *sitter.Tree {
 	parser := sitter.NewParser()
@@ -74,17 +72,16 @@ func GetImports(tree *sitter.Tree, document []byte) []string {
 	return ret
 }
 
-func main() {
-	args := os.Args[1:]
-	for _, filename := range args {
+func Run(filenames []string) ([]string, error) {
+	var ret []string
+	for _, filename := range filenames {
 		document, err := ioutil.ReadFile(filename)
 		if err != nil {
-			fmt.Println("ERROR!")
-			fmt.Println("   ", err)
-			return
+			return ret, err
 		}
 		tree := ParseFile(document)
-		fmt.Println("All Imports:", GetImports(tree, document))
+		imports := GetImports(tree, document)
+		ret = concat(ret, imports)
 	}
-	fmt.Println("All done")
+	return ret, nil
 }
