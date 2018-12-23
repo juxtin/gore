@@ -3,6 +3,7 @@ package gore
 import (
 	"fmt"
 	"io/ioutil"
+	"strconv"
 
 	sitter "github.com/smacker/go-tree-sitter"
 	"github.com/smacker/go-tree-sitter/golang"
@@ -17,7 +18,12 @@ func ParseFile(document []byte) *sitter.Tree {
 func nodeSource(node *sitter.Node, document []byte) string {
 	start := node.StartByte()
 	end := node.EndByte()
-	return string(document[start:end])
+	rawSrc := string(document[start:end])
+	src, err := strconv.Unquote(rawSrc)
+	if err != nil {
+		return rawSrc
+	}
+	return src
 }
 
 func hasChildren(node *sitter.Node) bool {
