@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 
-	"github.com/juxtin/gore/pkg/gore"
+	rel "github.com/juxtin/gore/pkg/relationships"
 )
 
 import "os"
 
 func main() {
 	filenames := os.Args[1:]
-	results, err := gore.ImportsInFile(filenames)
+	results, err := rel.ImportsInFile(filenames)
 	if err != nil {
 		fmt.Println("ERROR!")
 		fmt.Println("   ", err)
