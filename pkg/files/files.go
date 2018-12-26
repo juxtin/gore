@@ -26,14 +26,15 @@ func (fs *FS) Resolve(path string) string {
 }
 
 func (fs *FS) CacheFile(path string) []byte {
-	if existing, ok := fs.Files[path]; ok {
+	fullPath := fs.Resolve(path)
+	if existing, ok := fs.Files[fullPath]; ok {
 		return existing
 	}
-	document, err := ioutil.ReadFile(path)
+	document, err := ioutil.ReadFile(fullPath)
 	if err != nil {
-		fs.Files[path] = nil
+		fs.Files[fullPath] = nil
 	} else {
-		fs.Files[path] = document
+		fs.Files[fullPath] = document
 	}
-	return fs.Files[path]
+	return fs.Files[fullPath]
 }
