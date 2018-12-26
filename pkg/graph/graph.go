@@ -13,6 +13,12 @@ func NewGraph() *Graph {
 	return &Graph{r}
 }
 
+func (g *Graph) Merge(h *Graph) {
+	for k, vs := range h.relationships {
+		g.relationships[k] = vs
+	}
+}
+
 func (g *Graph) Contains(from string) bool {
 	_, ok := g.relationships[from]
 	return ok
