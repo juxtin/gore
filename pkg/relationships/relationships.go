@@ -65,8 +65,9 @@ func printChildren(node *sitter.Node, document []byte) {
 	}
 }
 
-func GetImports(tree *sitter.Tree, document []byte) []string {
+func GetImports(document []byte) []string {
 	ret := []string{}
+	tree := ParseFile(document)
 	n := tree.RootNode()
 	children := n.NamedChildCount()
 	for i := 0; i < int(children); i++ {
@@ -85,8 +86,7 @@ func ImportsInFile(filenames []string) ([]string, error) {
 		if err != nil {
 			return ret, err
 		}
-		tree := ParseFile(document)
-		imports := GetImports(tree, document)
+		imports := GetImports(document)
 		ret = concat(ret, imports)
 	}
 	return ret, nil
