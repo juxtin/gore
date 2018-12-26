@@ -13,6 +13,11 @@ func NewGraph() *Graph {
 	return &Graph{r}
 }
 
+func (g *Graph) Contains(from string) bool {
+	_, ok := g.relationships[from]
+	return ok
+}
+
 func (g *Graph) AddImport(from string, to string) {
 	existing, ok := g.relationships[from]
 	if ok {
