@@ -51,7 +51,6 @@ func DiscoverFiles(fs *FS, rootDir string) []DiscoveredFile {
 		return nil
 	}
 	filepath.Walk(rootDir, walker)
-	// debug only
 	return ret
 }
 
@@ -60,7 +59,7 @@ func isFullyQualified(path string) bool {
 }
 
 func (fs *FS) CacheFile(path string) []byte {
-	debug.Print("Full path:", path)
+	debug.Print("Reading file at path:", path)
 	if existing, ok := fs.Files[path]; ok {
 		return existing
 	}
