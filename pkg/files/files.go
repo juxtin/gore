@@ -25,9 +25,9 @@ func (fs *FS) Resolve(path string) string {
 	return path
 }
 
-func (fs *FS) CacheFile(path string) {
-	if _, ok := fs.Files[path]; ok {
-		return
+func (fs *FS) CacheFile(path string) []byte {
+	if existing, ok := fs.Files[path]; ok {
+		return existing
 	}
 	document, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -35,4 +35,5 @@ func (fs *FS) CacheFile(path string) {
 	} else {
 		fs.Files[path] = document
 	}
+	return fs.Files[path]
 }
