@@ -2,20 +2,17 @@ package main
 
 import (
 	"fmt"
+	"os"
 
-	rel "github.com/juxtin/gore/pkg/relationships"
+	"github.com/juxtin/gore/pkg/debug"
+	"github.com/juxtin/gore/pkg/gore"
 )
 
-import "os"
-
 func main() {
-	filenames := os.Args[1:]
-	results, err := rel.ImportsInFile(filenames)
-	if err != nil {
-		fmt.Println("ERROR!")
-		fmt.Println("   ", err)
-		return
-	}
-	fmt.Println("Imports:", results)
-	fmt.Println("All done")
+	filename := os.Args[1]
+	debug.Print("Filename:", filename)
+	gopath := os.Getenv("GOPATH")
+	result := gore.BuildGraph(gopath, filename)
+
+	fmt.Println(result)
 }

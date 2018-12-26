@@ -3,6 +3,8 @@ package files
 import (
 	"io/ioutil"
 	"strings"
+
+	"github.com/juxtin/gore/pkg/debug"
 )
 
 type FS struct {
@@ -19,14 +21,17 @@ func isFullyQualified(path string) bool {
 }
 
 func (fs *FS) Resolve(path string) string {
+	// TODO: actually find the dang file in here!
+	todo := "Actually find the dang file!"
 	if isFullyQualified(path) {
-		return fs.gopath + "/src/" + path
+		return fs.gopath + "/src/" + path + "/" + todo
 	}
 	return path
 }
 
 func (fs *FS) CacheFile(path string) []byte {
 	fullPath := fs.Resolve(path)
+	debug.Print("Full path:", fullPath)
 	if existing, ok := fs.Files[fullPath]; ok {
 		return existing
 	}
