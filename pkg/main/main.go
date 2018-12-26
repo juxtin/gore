@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/juxtin/gore/pkg/debug"
@@ -9,10 +8,8 @@ import (
 )
 
 func main() {
-	filename := os.Args[1]
-	debug.Print("Filename:", filename)
+	rootDir := os.Args[1]
+	debug.Print("Root dir:", rootDir)
 	gopath := os.Getenv("GOPATH")
-	result := gore.BuildGraph(gopath, filename)
-
-	fmt.Println(result)
+	gore.Smoke(gopath, rootDir)
 }
