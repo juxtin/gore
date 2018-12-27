@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"strconv"
 
+	"github.com/juxtin/gore/pkg/debug"
 	sitter "github.com/smacker/go-tree-sitter"
 	"github.com/smacker/go-tree-sitter/golang"
 )
@@ -63,6 +64,27 @@ func printChildren(node *sitter.Node, document []byte) {
 		fmt.Println(nodeSource(node, document))
 		fmt.Println()
 	}
+}
+
+func GetPackageName(document []byte) string {
+	// TODO: this is gonna result in some duplicated work
+	// should refactor back to passing the tree around so that we only have
+	// to parse once
+	tree := ParseFile(document)
+	rootNode := tree.RootNode()
+	var packageClause *sitter.Node
+	children := rootNode.NamedChildCount()
+	for i := 0; i < int(children); i++ {
+		n := rootNode.NamedChild(i)
+		if n.Type() == "package_clause" {
+			packageClause = n
+			break
+		}
+	}
+	debug.Print("Package Clause:", packageClause)
+	idNode := packageClause.NamedChild(0)
+	idSource := nodeSource(idNode, document)
+	return idSource
 }
 
 func GetImports(document []byte) []string {
