@@ -1,13 +1,29 @@
 # GORE
 
 The GOlang Repository Explorer will splay out your program's internals for the
-world to see.
+world to see, exposing inconvenient truths and telling the story of your code.
 
 
 ## WIP
 
-This is nowhere near done, it barely does anything, and what it does it probably
-does poorly. Use at your own risk, or better yet not at all.
+This is currently POC/tech demo-quality software. Use at your own risk, if at
+all. That said, neither the program itself nor the accompanying scripts do
+anything particularly dangerous like delete files, so it should be perfectly
+safe when used as directed.
+
+## Usage
+
+Clone this repo, then open a terminal in the project root and run
+`script/bootstrap` followed by `script/build`. That should leave a new
+executable at `bin/gore`.
+
+The easiest way to test it out is to run this project on itself with `bin/gore
+.`, then paste the output into [Webgraphviz](http://www.webgraphviz.com/) to
+visualize it.
+
+Note that `gore` currently just spits its results to stdout, so if you'd like to
+save them to a file then please use shell redirection like so: `bin/gore . >
+gore.dot`.
 
 ## purpose and rationale
 
