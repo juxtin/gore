@@ -1,6 +1,10 @@
 package graph
 
-import "github.com/awalterschulze/gographviz"
+import (
+	"strconv"
+
+	"github.com/awalterschulze/gographviz"
+)
 
 type relationships map[string][]string
 
@@ -25,6 +29,8 @@ func (g *Graph) Contains(from string) bool {
 }
 
 func (g *Graph) AddImport(from string, to string) {
+	from = strconv.Quote(from)
+	to = strconv.Quote(to)
 	existing, ok := g.relationships[from]
 	if ok {
 		g.relationships[from] = append(existing, to)

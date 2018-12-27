@@ -25,18 +25,18 @@ func TestGraph(t *testing.T) {
 		results.add(strings.TrimSpace(line))
 	}
 	expected := []string{
-		"main->util;",
-		"main->net;",
-		"main->cli;",
-		"cli->parse;",
-		"net->tcp;",
-		"net->util;",
-		"cli;",
-		"main;",
-		"net;",
-		"parse;",
-		"tcp;",
-		"util;",
+		"\"main\"->\"util\";",
+		"\"main\"->\"net\";",
+		"\"main\"->\"cli\";",
+		"\"cli\"->\"parse\";",
+		"\"net\"->\"tcp\";",
+		"\"net\"->\"util\";",
+		"\"cli\";",
+		"\"main\";",
+		"\"net\";",
+		"\"parse\";",
+		"\"tcp\";",
+		"\"util\";",
 	}
 	for _, v := range expected {
 		assertContains(t, results, v)

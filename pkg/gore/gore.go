@@ -31,21 +31,18 @@ func AnalyzeFiles(dfs *[]files.DiscoveredFile) []SourceFile {
 	return ret
 }
 
-func buildGraph(fs *files.FS, gopath string, root string) *graph.Graph {
-	startFile := fs.CacheFile(root)
+func buildGraph(sourceFiles *[]SourceFile) graph.Graph {
 	graph := graph.NewGraph()
-	initBranches := rel.GetImports(startFile)
-	for _, to := range initBranches {
-		downstream := buildGraph(fs, gopath, to)
-		graph.Merge(downstream)
+	for _, sf := range *sourceFiles {
+		for _, imported := range sf.Imports {
+			graph.AddImport(sf.ImportPath, imported)
+		}
 	}
-	return graph
+	return *graph
 }
 
 func BuildGraph(gopath string, root string) string {
-	fs := files.NewFS(gopath)
-	graph := buildGraph(fs, gopath, root)
-	return graph.Graphviz()
+	return "todo"
 }
 
 func Smoke(gopath string, root string) {
@@ -58,4 +55,7 @@ func Smoke(gopath string, root string) {
 	for i, sf := range analyzed {
 		fmt.Println("Package", i, "-", sf.ImportPath, "Imports:", sf.Imports, "Bytes:", len(sf.Contents))
 	}
+	graph := buildGraph(&analyzed)
+	fmt.Println("Graph:")
+	fmt.Println(graph.Graphviz())
 }
