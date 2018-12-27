@@ -23,7 +23,10 @@ type DiscoveredFile struct {
 }
 
 func NewFS(gopath string) *FS {
-	return &FS{gopath, map[string][]byte{}}
+	return &FS{
+		gopath: gopath,
+		Files:  map[string][]byte{},
+	}
 }
 
 func importPath(srcPath string) string {
@@ -36,11 +39,18 @@ func discoverFile(fs *FS, fullPath string, info os.FileInfo) DiscoveredFile {
 	srcPath := strings.TrimPrefix(fullPath, fs.gopath+"/src/")
 	importPath := importPath(srcPath)
 	debug.Print("Shortened", fullPath, "to", importPath)
-	return DiscoveredFile{srcPath, fullPath, importPath, contents}
+	return DiscoveredFile{
+		SrcPath:    srcPath,
+		FullPath:   fullPath,
+		ImportPath: importPath,
+		Contents:   contents,
+	}
 }
 
 func isGoFile(path string) bool {
-	return strings.HasSuffix(path, ".go") && !strings.HasPrefix(path, ".") && !strings.HasSuffix(path, "_test.go")
+	return strings.HasSuffix(path, ".go") &&
+		!strings.HasPrefix(path, ".") &&
+		!strings.HasSuffix(path, "_test.go")
 }
 
 func DiscoverFiles(fs *FS, rootDir string) []DiscoveredFile {
@@ -55,10 +65,6 @@ func DiscoverFiles(fs *FS, rootDir string) []DiscoveredFile {
 	}
 	filepath.Walk(rootDir, walker)
 	return ret
-}
-
-func isFullyQualified(path string) bool {
-	return strings.Contains(path, "/")
 }
 
 func (fs *FS) CacheFile(path string) []byte {

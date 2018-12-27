@@ -23,7 +23,13 @@ func AnalyzeFile(df *files.DiscoveredFile) SourceFile {
 	importPath := df.ImportPath
 	srcPath := df.SrcPath
 	imports := rel.GetImports(contents)
-	return SourceFile{packageName, importPath, srcPath, imports, contents}
+	return SourceFile{
+		PackageName: packageName,
+		ImportPath:  importPath,
+		SrcPath:     srcPath,
+		Imports:     imports,
+		Contents:    contents,
+	}
 }
 
 func AnalyzeFiles(dfs *[]files.DiscoveredFile) []SourceFile {
