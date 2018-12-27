@@ -3,6 +3,7 @@ package gore
 import (
 	"fmt"
 
+	"github.com/juxtin/gore/pkg/debug"
 	"github.com/juxtin/gore/pkg/files"
 	"github.com/juxtin/gore/pkg/graph"
 	rel "github.com/juxtin/gore/pkg/relationships"
@@ -55,13 +56,12 @@ func Smoke(gopath string, root string) {
 	fs := files.NewFS(gopath)
 	discovered := files.DiscoverFiles(fs, root)
 	for i, df := range discovered {
-		fmt.Println("File", i, "-", df.FullPath, " (", df.SrcPath, ")", len(df.Contents), "bytes")
+		debug.Print("File", i, "-", df.FullPath, " (", df.SrcPath, ")", len(df.Contents), "bytes")
 	}
 	analyzed := AnalyzeFiles(&discovered)
 	for i, sf := range analyzed {
-		fmt.Println("Package", i, "-", sf.ImportPath, "Imports:", sf.Imports, "Bytes:", len(sf.Contents))
+		debug.Print("Package", i, "-", sf.ImportPath, "Imports:", sf.Imports, "Bytes:", len(sf.Contents))
 	}
 	graph := buildGraph(&analyzed)
-	fmt.Println("Graph:")
 	fmt.Println(graph.Graphviz())
 }
