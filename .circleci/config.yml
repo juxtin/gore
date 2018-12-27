@@ -17,5 +17,5 @@ jobs:
       - checkout
 
       # specify any bash command here prefixed with `run: `
-      - run: script/bootstrap.sh
-      - run: script/test.sh
+      - run: script/bootstrap
+      - run: script/test
