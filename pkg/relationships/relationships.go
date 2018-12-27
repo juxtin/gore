@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"strconv"
 
-	"github.com/juxtin/gore/pkg/debug"
 	sitter "github.com/smacker/go-tree-sitter"
 	"github.com/smacker/go-tree-sitter/golang"
 )
@@ -70,6 +69,9 @@ func GetPackageName(document []byte) string {
 	// TODO: this is gonna result in some duplicated work
 	// should refactor back to passing the tree around so that we only have
 	// to parse once
+	// ALSO TODO: this whole function may be unnecessary; I think actually
+	// the spec only allows for package names that match the last segment in
+	// their path
 	tree := ParseFile(document)
 	rootNode := tree.RootNode()
 	var packageClause *sitter.Node
@@ -81,7 +83,6 @@ func GetPackageName(document []byte) string {
 			break
 		}
 	}
-	debug.Print("Package Clause:", packageClause)
 	idNode := packageClause.NamedChild(0)
 	idSource := nodeSource(idNode, document)
 	return idSource

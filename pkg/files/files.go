@@ -3,6 +3,7 @@ package files
 import (
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -15,26 +16,27 @@ type FS struct {
 }
 
 type DiscoveredFile struct {
-	SrcPath  string
-	FullPath string
-	Contents []byte
-}
-
-type SourceFile struct {
-	PackageName string
-	Imports     []string
-	Contents    []byte
+	SrcPath    string
+	FullPath   string
+	ImportPath string
+	Contents   []byte
 }
 
 func NewFS(gopath string) *FS {
 	return &FS{gopath, map[string][]byte{}}
 }
 
+func importPath(srcPath string) string {
+	dir, _ := path.Split(srcPath)
+	return strings.TrimSuffix(dir, "/")
+}
+
 func discoverFile(fs *FS, fullPath string, info os.FileInfo) DiscoveredFile {
 	contents := fs.CacheFile(fullPath)
 	srcPath := strings.TrimPrefix(fullPath, fs.gopath+"/src/")
-	debug.Print("Shortened", fullPath, "to", srcPath)
-	return DiscoveredFile{srcPath, fullPath, contents}
+	importPath := importPath(srcPath)
+	debug.Print("Shortened", fullPath, "to", importPath)
+	return DiscoveredFile{srcPath, fullPath, importPath, contents}
 }
 
 func isGoFile(path string) bool {
@@ -46,7 +48,8 @@ func DiscoverFiles(fs *FS, rootDir string) []DiscoveredFile {
 	walker := func(path string, info os.FileInfo, err error) error {
 		if isGoFile(path) && err == nil {
 			debug.Print("Discovered:", path)
-			ret = append(ret, discoverFile(fs, path, info))
+			absPath, _ := filepath.Abs(path)
+			ret = append(ret, discoverFile(fs, absPath, info))
 		}
 		return nil
 	}
