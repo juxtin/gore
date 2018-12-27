@@ -11,6 +11,7 @@ import (
 type SourceFile struct {
 	PackageName string
 	ImportPath  string
+	SrcPath     string
 	Imports     []string
 	Contents    []byte
 }
@@ -19,8 +20,9 @@ func AnalyzeFile(df *files.DiscoveredFile) SourceFile {
 	contents := df.Contents
 	packageName := rel.GetPackageName(contents)
 	importPath := df.ImportPath
+	srcPath := df.SrcPath
 	imports := rel.GetImports(contents)
-	return SourceFile{packageName, importPath, imports, contents}
+	return SourceFile{packageName, importPath, srcPath, imports, contents}
 }
 
 func AnalyzeFiles(dfs *[]files.DiscoveredFile) []SourceFile {
@@ -42,7 +44,11 @@ func buildGraph(sourceFiles *[]SourceFile) graph.Graph {
 }
 
 func BuildGraph(gopath string, root string) string {
-	return "todo"
+	fs := files.NewFS(gopath)
+	discovered := files.DiscoverFiles(fs, root)
+	analyzed := AnalyzeFiles(&discovered)
+	graph := buildGraph(&analyzed)
+	return graph.Graphviz()
 }
 
 func Smoke(gopath string, root string) {
