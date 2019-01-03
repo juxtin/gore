@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/juxtin/gore/pkg/debug"
+	"github.com/juxtin/gore/pkg/files"
 	"github.com/juxtin/gore/pkg/gore"
 	cli "gopkg.in/urfave/cli.v1"
 )
@@ -31,10 +32,13 @@ func graph(c *cli.Context) error {
 	}
 	graph := gore.BuildGraph(gopath, rootDir)
 	if len(output) == 0 {
+		// defaulting to stdout
 		fmt.Println(graph)
 	} else {
-		fmt.Println("writing to", output)
-		die("not implemented yet!")
+		debug.Print("writing to: " + output)
+		if err := files.WriteFile(output, graph); err != nil {
+			die("Error writing '" + output + "': " + err.Error())
+		}
 	}
 	return nil
 }

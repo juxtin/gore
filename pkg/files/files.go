@@ -80,3 +80,9 @@ func (fs *FS) CacheFile(path string) []byte {
 	}
 	return fs.Files[path]
 }
+
+func WriteFile(path string, contents string) error {
+	bytes := []byte(contents)
+	err := ioutil.WriteFile(path, bytes, 0644)
+	return err
+}
