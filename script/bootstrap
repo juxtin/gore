@@ -14,3 +14,6 @@ go get -d github.com/awalterschulze/gographviz
 
 echo "downloading testify"
 go get -d github.com/stretchr/testify/require
+
+echo "downloading cli"
+go get gopkg.in/urfave/cli.v1
