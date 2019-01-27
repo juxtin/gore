@@ -86,3 +86,42 @@ func WriteFile(path string, contents string) error {
 	err := ioutil.WriteFile(path, bytes, 0644)
 	return err
 }
+
+type Decision int
+
+const (
+	// Allow delegates decision to the next function in the chain
+	Allow Decision = iota
+	// Accept short circuits, returning true
+	Accept
+	// Reject short circuits, returning false
+	Reject
+)
+
+type Filter struct {
+	Accept func(string) bool
+}
+
+func acceptAll(_ string) bool {
+	return true
+}
+
+func NewFilter() Filter {
+	return Filter{Accept: acceptAll}
+}
+
+func (f Filter) Comp(fn func(string) Decision) Filter {
+	newFn := func(path string) bool {
+		switch fn(path) {
+		case Allow:
+			return f.Accept(path)
+		case Accept:
+			return true
+		case Reject:
+			return false
+		default:
+			panic("Filtering function returned an invalid value!")
+		}
+	}
+	return Filter{Accept: newFn}
+}
