@@ -125,3 +125,27 @@ func (f Filter) Comp(fn func(string) Decision) Filter {
 	}
 	return Filter{Accept: newFn}
 }
+
+// AcceptIf returns an Accept decision if the expr is true, otherwise Allow
+func AcceptIf(expr bool) Decision {
+	if expr {
+		return Accept
+	}
+	return Allow
+}
+
+// RejectIf returns a Reject decision if the expr is true, otherwise Allow
+func RejectIf(expr bool) Decision {
+	if expr {
+		return Reject
+	}
+	return Allow
+}
+
+// Require returns an Allow decision if the expr is true, otherwise Reject
+func Require(expr bool) Decision {
+	if expr {
+		return Allow
+	}
+	return Reject
+}

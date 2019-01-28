@@ -25,10 +25,7 @@ func TestFilters(t *testing.T) {
 
 	// Comp with rejection
 	rejectFooStar := empty.Comp(func(path string) files.Decision {
-		if strings.HasPrefix(path, "foo") {
-			return files.Reject
-		}
-		return files.Allow
+		return files.RejectIf(strings.HasPrefix(path, "foo"))
 	})
 	assert.False(t, rejectFooStar.Accept("foo"), "rejectFooStar should reject 'foo'")
 	assert.False(t, rejectFooStar.Accept("football"), "rejectFooStar should reject 'football'")
@@ -36,10 +33,7 @@ func TestFilters(t *testing.T) {
 
 	// Comp with acceptance
 	acceptFoo := rejectFooStar.Comp(func(path string) files.Decision {
-		if path == "foo" {
-			return files.Accept
-		}
-		return files.Allow
+		return files.AcceptIf(path == "foo")
 	})
 	assert.True(t, acceptFoo.Accept("foo"), "acceptFoo should accept 'foo'")
 	assert.False(t, acceptFoo.Accept("foosball"), "acceptFoo should reject 'foosball'")
